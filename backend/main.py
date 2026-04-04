@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List, Dict
 import uuid
@@ -12,6 +13,15 @@ from ai.hard import HardAI
 from storage.replay import ReplayStorage
 
 app = FastAPI(title="Chess Game API")
+
+# CORS middleware for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins for development
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Game state storage (use Redis in production)
 games: Dict = {}
@@ -36,6 +46,11 @@ class GameState(BaseModel):
 
 @app.post("/api/game/start")
 def start_game(req: StartGameRequest):
+    # Validate difficulty
+    valid_difficulties = ["simple", "medium", "hard"]
+    if req.difficulty not in valid_difficulties:
+        raise HTTPException(status_code=400, detail="Invalid difficulty")
+
     game_id = str(uuid.uuid4())[:8]
     board = Board()
     games[game_id] = {
