@@ -48,3 +48,33 @@ def test_set_piece():
     board.set_piece("e2", Pawn(Color.WHITE))
     assert not board.is_empty("e2")
     assert board.get_piece("e2").symbol == "P"
+
+def test_get_board_state():
+    board = Board()
+    state = board.get_board_state()
+    assert len(state) == 8  # 8 rows
+    assert len(state[0]) == 8  # 8 columns
+    assert state[0][4] == 'k'  # Rank 8 row, file e = black king
+    assert state[7][4] == 'K'  # Rank 1 row, file e = white king
+
+def test_copy():
+    board = Board()
+    copied = board.copy()
+    assert copied.turn == board.turn
+    assert copied.get_piece("e2").symbol == 'P'
+    # Modify original, copied should be independent
+    board.remove_piece("e2")
+    assert copied.get_piece("e2").symbol == 'P'
+
+def test_move_history():
+    board = Board()
+    assert board.move_history == []
+    board.move_history.append({"from": "e2", "to": "e4"})
+    assert len(board.move_history) == 1
+
+def test_castling_rights():
+    board = Board()
+    assert board.castling_rights[Color.WHITE]["K"] == True
+    assert board.castling_rights[Color.WHITE]["Q"] == True
+    assert board.castling_rights[Color.BLACK]["k"] == True
+    assert board.castling_rights[Color.BLACK]["q"] == True

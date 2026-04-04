@@ -1,3 +1,4 @@
+import copy
 from typing import Dict, List, Optional, Tuple
 from .pieces import (
     Piece, Pawn, Rook, Knight, Bishop, Queen, King, Color
@@ -92,7 +93,7 @@ class Board:
     def copy(self) -> 'Board':
         """Create deep copy of board"""
         new_board = Board.__new__(Board)
-        new_board.squares = {pos: piece for pos, piece in self.squares.items()}
+        new_board.squares = copy.deepcopy(self.squares)
         new_board.turn = self.turn
         new_board.move_history = self.move_history.copy()
         new_board.castling_rights = {
