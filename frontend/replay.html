@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际象棋 - 复盘</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>♔ 复盘记录</h1>
+
+        <div class="replay-layout">
+            <div class="replay-list-container">
+                <h2>历史棋局</h2>
+                <div id="replay-list" class="replay-list"></div>
+            </div>
+
+            <div class="replay-view-container">
+                <div class="board-container">
+                    <div id="board-container"></div>
+                </div>
+
+                <div class="replay-controls">
+                    <button class="btn" id="prevBtn" onclick="replayView.prevMove()">◀ 上一步</button>
+                    <span id="move-counter">0 / 0</span>
+                    <button class="btn" id="nextBtn" onclick="replayView.nextMove()">下一步 ▶</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="index.html">← 返回主页</a>
+        </div>
+    </div>
+
+    <script src="static/js/api.js"></script>
+    <script src="static/js/board.js"></script>
+    <script src="static/js/replay.js"></script>
+</body>
+</html>

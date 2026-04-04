@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>国际象棋 - 对弈中</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>♔ 国际象棋</h1>
+
+        <div class="game-info">
+            <div class="turn-indicator" id="turn-indicator">白方回合 (你)</div>
+            <div class="game-controls">
+                <button class="btn" onclick="game.restart()">重新开始</button>
+                <button class="btn" id="saveBtn">保存复盘</button>
+            </div>
+        </div>
+
+        <div class="captured-pieces" id="captured-white"></div>
+        <div class="board-container">
+            <div id="board-container"></div>
+        </div>
+        <div class="captured-pieces" id="captured-black"></div>
+
+        <div id="game-over-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2 id="game-over-message">游戏结束</h2>
+                <button class="btn btn-primary" onclick="game.restart()">再来一局</button>
+                <button class="btn" onclick="window.location.href='index.html'">返回主页</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/api.js"></script>
+    <script src="static/js/board.js"></script>
+    <script src="static/js/game.js"></script>
+</body>
+</html>
