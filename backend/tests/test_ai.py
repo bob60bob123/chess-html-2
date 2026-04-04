@@ -56,3 +56,47 @@ def test_all_ais_return_different_moves():
     assert simple_move is not None
     assert medium_move is not None
     assert hard_move is not None
+
+def test_no_legal_moves_returns_none():
+    """When there are no legal moves, AI should return None"""
+    from backend.ai.simple import SimpleAI
+    from backend.game.pieces import Queen, Rook, King
+    board = Board()
+    # Clear the board completely
+    for file in 'abcdefgh':
+        for rank in '12345678':
+            board.set_piece(file + rank, None)
+    # Set up a checkmate position:
+    # Black king at a8 (cornered)
+    # White queen at c7 (checking the king)
+    # White rooks at b6 and c6 (protecting the queen)
+    # King has no legal moves: a7 (attacked by rook b6), b8 (attacked by queen c7)
+    board.set_piece("a8", King(Color.BLACK))
+    board.set_piece("c7", Queen(Color.WHITE))
+    board.set_piece("b6", Rook(Color.WHITE))
+    board.set_piece("c6", Rook(Color.WHITE))
+    board.turn = Color.BLACK
+
+    ai = SimpleAI(board, Color.BLACK)
+    move = ai.get_move()
+    assert move is None
+
+def test_medium_ai_returns_legal_move():
+    from backend.ai.medium import MediumAI
+    from backend.game.rules import GameRules
+    board = Board()
+    ai = MediumAI(board, Color.WHITE)
+    move = ai.get_move()
+    assert move is not None
+    rules = GameRules(board)
+    assert rules.is_legal_move(move[0], move[1], Color.WHITE)
+
+def test_hard_ai_returns_legal_move():
+    from backend.ai.hard import HardAI
+    from backend.game.rules import GameRules
+    board = Board()
+    ai = HardAI(board, Color.WHITE)
+    move = ai.get_move()
+    assert move is not None
+    rules = GameRules(board)
+    assert rules.is_legal_move(move[0], move[1], Color.WHITE)
