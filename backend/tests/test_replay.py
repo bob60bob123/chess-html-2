@@ -23,7 +23,7 @@ def test_list_replays():
         storage = ReplayStorage(tmpdir)
         storage.save({"id": "game-1", "moves": []})
         storage.save({"id": "game-2", "moves": []})
-        replays = storage.list()
+        replays = storage.list_replays()
         assert len(replays) == 2
 
 def test_load_nonexistent():

@@ -30,20 +30,24 @@ class ReplayStorage:
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
 
-    def list(self) -> List[Dict]:
+    def list_replays(self) -> List[Dict]:
         """List all replays sorted by creation date (newest first)"""
         replays = []
         for filename in os.listdir(self.storage_dir):
             if filename.endswith('.json'):
                 filepath = os.path.join(self.storage_dir, filename)
-                with open(filepath, 'r', encoding='utf-8') as f:
-                    replays.append(json.load(f))
+                try:
+                    with open(filepath, 'r', encoding='utf-8') as f:
+                        replays.append(json.load(f))
+                except (FileNotFoundError, json.JSONDecodeError):
+                    continue
         return sorted(replays, key=lambda x: x.get('created_at', ''), reverse=True)
 
     def delete(self, replay_id: str) -> bool:
         """Delete replay by ID, returns True if deleted"""
         filepath = os.path.join(self.storage_dir, f"{replay_id}.json")
-        if os.path.exists(filepath):
+        try:
             os.remove(filepath)
             return True
-        return False
+        except FileNotFoundError:
+            return False
