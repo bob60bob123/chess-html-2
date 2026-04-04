@@ -4,13 +4,19 @@ from pydantic import BaseModel
 from typing import Optional, List, Dict
 import uuid
 
-from game.board import Board
-from game.pieces import Color
-from game.rules import GameRules
-from ai.simple import SimpleAI
-from ai.medium import MediumAI
-from ai.hard import HardAI
-from storage.replay import ReplayStorage
+import sys
+from pathlib import Path
+
+# Add backend to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from backend.game.board import Board
+from backend.game.pieces import Color
+from backend.game.rules import GameRules
+from backend.ai.simple import SimpleAI
+from backend.ai.medium import MediumAI
+from backend.ai.hard import HardAI
+from backend.storage.replay import ReplayStorage
 
 app = FastAPI(title="Chess Game API")
 
