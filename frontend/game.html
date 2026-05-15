@@ -7,34 +7,130 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>♔ 国际象棋</h1>
-
-        <div class="game-info">
-            <div class="turn-indicator" id="turn-indicator">白方回合 (你)</div>
-            <div class="game-controls">
-                <button class="btn" onclick="game.restart()">重新开始</button>
-                <button class="btn" id="saveBtn">保存复盘</button>
+    <div class="game-layout">
+        <div class="captured-panel">
+            <div class="win-rate-section">
+                <div class="win-rate-display">
+                    <div class="win-rate-item">
+                        <span class="win-rate-label">♔ 白方</span>
+                        <span class="win-rate-value" id="white-win-rate">50%</span>
+                    </div>
+                    <div class="win-rate-divider">:</div>
+                    <div class="win-rate-item">
+                        <span class="win-rate-label">♚ 黑方</span>
+                        <span class="win-rate-value" id="black-win-rate">50%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="captured-section">
+                <div class="captured-label">白方吃子</div>
+                <div class="captured-pieces-display" id="captured-by-white"></div>
+            </div>
+            <div class="captured-section">
+                <div class="captured-label">黑方吃子</div>
+                <div class="captured-pieces-display" id="captured-by-black"></div>
             </div>
         </div>
 
-        <div class="captured-pieces" id="captured-white"></div>
-        <div class="board-container">
-            <div id="board-container"></div>
-        </div>
-        <div class="captured-pieces" id="captured-black"></div>
+        <div class="game-center">
+            <div class="game-header">
+                <h1 class="game-title"><span>♔</span> 国际象棋 <span>♚</span></h1>
+            </div>
 
-        <div id="game-over-modal" class="modal" style="display: none;">
-            <div class="modal-content">
-                <h2 id="game-over-message">游戏结束</h2>
-                <button class="btn btn-primary" onclick="game.restart()">再来一局</button>
-                <button class="btn" onclick="window.location.href='index.html'">返回主页</button>
+            <div class="game-info">
+                <div class="turn-indicator white-turn" id="turn-indicator">白方回合</div>
+                <div class="game-controls">
+                    <button class="btn" onclick="game.undo()">悔棋</button>
+                    <button class="btn" onclick="game.restart()">重新开始</button>
+                </div>
+            </div>
+
+            <div class="board-frame">
+                <div class="board-container">
+                    <div id="board-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="rules-panel">
+            <h2 class="rules-title">♟️ 棋子规则</h2>
+
+            <div class="rule-section">
+                <h3>♙ 兵 (Pawn)</h3>
+                <ul>
+                    <li>每步只能前进一格（起始位置可前进两格）</li>
+                    <li>只能斜向前进时吃子</li>
+                    <li><strong>吃过路兵：</strong>敌方兵从两格格出发，经过我方兵攻击范围时，可斜吃之</li>
+                    <li><strong>升变：</strong>兵到达对方底线时可升变为后、车、象、马之一</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♖ 车 (Rook)</h3>
+                <ul>
+                    <li>只能水平或垂直移动</li>
+                    <li>格数不限，不能跳过其他棋子</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♘ 马 (Knight)</h3>
+                <ul>
+                    <li>走"日"字（L形）</li>
+                    <li>可以跳过其他棋子</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♗ 象 (Bishop)</h3>
+                <ul>
+                    <li>只能斜线移动</li>
+                    <li>格数不限，不能跳过其他棋子</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♕ 后 (Queen)</h3>
+                <ul>
+                    <li>可水平、垂直、斜线移动</li>
+                    <li>格数不限，是最强大的棋子</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♔ 王 (King)</h3>
+                <ul>
+                    <li>可任意方向移动一格</li>
+                    <li><strong>王车易位：</strong>王与车都未移动，且中间无棋子，王可向车方向移动两格，车越过王跳到王另一侧</li>
+                    <li>王被将军时必须解除将军</li>
+                </ul>
+            </div>
+
+            <div class="rule-section">
+                <h3>♚ 游戏术语</h3>
+                <ul>
+                    <li><strong>将军 (Check)：</strong>王的走棋一步后受到攻击</li>
+                    <li><strong>将死 (Checkmate)：</strong>王被将军且无法解除</li>
+                    <li><strong>困毙 (Stalemate)：</strong>无合法棋可走但王未被将军</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="game-over-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="game-over-message">游戏结束</h2>
+            <p id="game-over-result"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="game.restart()">再来一局</button>
+                <button class="btn btn-secondary" onclick="window.location.href='index.html'">返回主页</button>
             </div>
         </div>
     </div>
 
     <script src="static/js/api.js"></script>
     <script src="static/js/board.js"></script>
+    <script src="static/js/sound.js"></script>
     <script src="static/js/game.js"></script>
 </body>
 </html>

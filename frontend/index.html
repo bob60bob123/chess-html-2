@@ -7,24 +7,30 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>♔ 国际象棋 ♚</h1>
-        <p class="subtitle">人机对弈</p>
+    <div class="index-container">
+        <div class="title-wrapper">
+            <h1 class="main-title">
+                <span class="title-ornament">♔ ♕ ♚</span>
+                国际象棋
+                <span class="title-ornament">♖ ♗ ♘</span>
+            </h1>
+            <p class="subtitle">人机对弈</p>
+        </div>
 
-        <div class="difficulty-selection">
-            <h2>选择难度</h2>
+        <div class="difficulty-section">
+            <h2 class="difficulty-title">选择难度</h2>
             <div class="difficulty-buttons">
-                <button class="btn difficulty-btn" data-difficulty="simple">
+                <button class="difficulty-btn" data-difficulty="simple">
                     <span class="difficulty-icon">🌱</span>
                     <span class="difficulty-name">简单</span>
                     <span class="difficulty-desc">随机走法</span>
                 </button>
-                <button class="btn difficulty-btn" data-difficulty="medium">
+                <button class="difficulty-btn" data-difficulty="medium">
                     <span class="difficulty-icon">🌳</span>
                     <span class="difficulty-name">中等</span>
                     <span class="difficulty-desc">Minimax 2层</span>
                 </button>
-                <button class="btn difficulty-btn" data-difficulty="hard">
+                <button class="difficulty-btn" data-difficulty="hard">
                     <span class="difficulty-icon">🏔️</span>
                     <span class="difficulty-name">困难</span>
                     <span class="difficulty-desc">Alpha-Beta 4层</span>
@@ -32,13 +38,7 @@
             </div>
         </div>
 
-        <div class="actions">
-            <button id="startBtn" class="btn btn-primary" disabled>开始游戏</button>
-        </div>
-
-        <div class="history-link">
-            <a href="replay.html">📜 查看复盘记录</a>
-        </div>
+        <button id="startBtn" class="start-btn" disabled>开始对弈</button>
     </div>
 
     <script src="static/js/api.js"></script>

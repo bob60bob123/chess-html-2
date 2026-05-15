@@ -53,11 +53,15 @@ class ChessBoard {
     }
 
     coordsToPos(file, rank) {
-        return String.fromCharCode(97 + file) + (rank + 1);
+        // rank 0 = row 0 = should be rank 8 (black's back rank / top of board)
+        // rank 7 = row 7 = should be rank 1 (white's back rank / bottom of board)
+        return String.fromCharCode(97 + file) + (8 - rank);
     }
 
     posToCoords(pos) {
-        return [pos.charCodeAt(0) - 97, parseInt(pos[1]) - 1];
+        // pos like 'e2' -> [file_idx, rank_idx] where rank_idx 0=rank8, 7=rank1
+        // 'e2' has rank 2, which is rank_idx = 8 - 2 = 6
+        return [pos.charCodeAt(0) - 97, 8 - parseInt(pos[1])];
     }
 
     getPieceUnicode(symbol) {

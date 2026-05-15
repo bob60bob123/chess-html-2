@@ -10,26 +10,28 @@ const API = {
         return res.json();
     },
 
-    async makeMove(gameId, from, to) {
+    async makeMove(gameId, from, to, promotion) {
+        const body = {game_id: gameId, from_pos: from, to_pos: to};
+        if (promotion) body.promotion = promotion;
         const res = await fetch(`${this.baseUrl}/api/game/move`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({game_id: gameId, from_pos: from, to_pos: to})
+            body: JSON.stringify(body)
+        });
+        return res.json();
+    },
+
+    async aiMove(gameId) {
+        const res = await fetch(`${this.baseUrl}/api/game/ai_move`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({game_id: gameId})
         });
         return res.json();
     },
 
     async getState(gameId) {
         const res = await fetch(`${this.baseUrl}/api/game/state/${gameId}`);
-        return res.json();
-    },
-
-    async undoMove(gameId) {
-        const res = await fetch(`${this.baseUrl}/api/game/undo`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({game_id: gameId})
-        });
         return res.json();
     },
 
@@ -43,8 +45,15 @@ const API = {
         return res.json();
     },
 
-    async saveReplay(gameId) {
-        const res = await fetch(`${this.baseUrl}/api/replay/save`, {
+    async deleteReplay(replayId) {
+        const res = await fetch(`${this.baseUrl}/api/replay/${replayId}`, {
+            method: 'DELETE'
+        });
+        return res.json();
+    },
+
+    async undoMove(gameId) {
+        const res = await fetch(`${this.baseUrl}/api/game/undo`, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({game_id: gameId})

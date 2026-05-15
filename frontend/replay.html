@@ -7,18 +7,26 @@
     <link rel="stylesheet" href="static/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>♔ 复盘记录</h1>
+    <div class="index-container">
+        <div class="title-wrapper">
+            <h1 class="main-title">
+                <span class="title-ornament">♔</span>
+                复盘记录
+                <span class="title-ornament">♚</span>
+            </h1>
+        </div>
 
         <div class="replay-layout">
             <div class="replay-list-container">
-                <h2>历史棋局</h2>
+                <h2 class="replay-list-title">历史棋局</h2>
                 <div id="replay-list" class="replay-list"></div>
             </div>
 
             <div class="replay-view-container">
-                <div class="board-container">
-                    <div id="board-container"></div>
+                <div class="board-frame">
+                    <div class="board-container">
+                        <div id="board-container"></div>
+                    </div>
                 </div>
 
                 <div class="replay-controls">

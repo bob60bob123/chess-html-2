@@ -28,6 +28,7 @@ class ReplayView {
                 <span class="replay-id">#${r.id}</span>
                 <span class="replay-date">${new Date(r.created_at).toLocaleString()}</span>
                 <span class="replay-result">${this.getResultText(r.result)}</span>
+                <button class="replay-delete-btn" onclick="event.stopPropagation(); replayView.deleteReplay('${r.id}')">×</button>
             </div>
         `).join('');
     }
@@ -78,8 +79,9 @@ class ReplayView {
         const [fromFile, fromRank] = [move.from.charCodeAt(0) - 97, parseInt(move.from[1]) - 1];
         const [toFile, toRank] = [move.to.charCodeAt(0) - 97, parseInt(move.to[1]) - 1];
 
-        newBoard[7 - toRank][toFile] = newBoard[7 - fromRank][fromFile];
-        newBoard[7 - fromRank][fromFile] = null;
+        // Backend uses rank 8 as row 0, rank 1 as row 7
+        newBoard[8 - toRank][toFile] = newBoard[8 - fromRank][fromFile];
+        newBoard[8 - fromRank][fromFile] = null;
         return newBoard;
     }
 
@@ -103,6 +105,21 @@ class ReplayView {
         if (this.currentMoveIndex < this.currentReplay.moves.length) {
             this.currentMoveIndex++;
             this.renderReplay();
+        }
+    }
+
+    async deleteReplay(replayId) {
+        if (!confirm('确定要删除这条复盘记录吗？')) return;
+        try {
+            await API.deleteReplay(replayId);
+            this.replays = this.replays.filter(r => r.id !== replayId);
+            if (this.currentReplay && this.currentReplay.id === replayId) {
+                this.currentReplay = null;
+                this.board.render(this.getInitialBoard(), 'white');
+            }
+            this.renderList();
+        } catch (error) {
+            alert('删除失败！');
         }
     }
 

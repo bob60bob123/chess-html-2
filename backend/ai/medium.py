@@ -1,4 +1,4 @@
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 from backend.game.board import Board
 from backend.game.pieces import Color
 from backend.game.rules import GameRules
@@ -21,8 +21,9 @@ class MediumAI:
         best_moves = []
 
         for from_pos, to_pos in legal_moves:
-            new_board = self._simulate_move(from_pos, to_pos)
-            score = self._minimax(new_board, self.depth - 1, False)
+            captured = self._do_move(from_pos, to_pos)
+            score = self._minimax(self.depth - 1, False)
+            self._undo_move(from_pos, to_pos, captured)
 
             if score > best_score:
                 best_score = score
@@ -32,38 +33,53 @@ class MediumAI:
 
         return random.choice(best_moves)
 
-    def _minimax(self, board: Board, depth: int, is_maximizing: bool) -> float:
-        if depth == 0:
-            return self._evaluate(board)
+    def _do_move(self, from_pos: str, to_pos: str):
+        piece = self.board.remove_piece(from_pos)
+        captured = self.board.get_piece(to_pos)
+        self.board.set_piece(to_pos, piece)
+        self.board.turn = self.board.turn.opponent()
+        return captured
 
-        rules = GameRules(board)
+    def _undo_move(self, from_pos: str, to_pos: str, captured):
+        piece = self.board.remove_piece(to_pos)
+        self.board.set_piece(from_pos, piece)
+        if captured:
+            self.board.set_piece(to_pos, captured)
+        self.board.turn = self.board.turn.opponent()
+
+    def _minimax(self, depth: int, is_maximizing: bool) -> float:
+        if depth == 0:
+            return self._evaluate()
+
         color = self.color if is_maximizing else self.color.opponent()
-        legal_moves = rules.get_all_legal_moves(color)
+        legal_moves = self.rules.get_all_legal_moves(color)
 
         if not legal_moves:
-            if rules.is_king_in_check(color):
+            if self.rules.is_king_in_check(color):
                 return float('-inf') if is_maximizing else float('inf')
-            return 0  # Stalemate (draw)
+            return 0
 
         if is_maximizing:
             best_score = float('-inf')
             for from_pos, to_pos in legal_moves:
-                new_board = self._simulate_move_on_board(board, from_pos, to_pos)
-                score = self._minimax(new_board, depth - 1, False)
+                captured = self._do_move(from_pos, to_pos)
+                score = self._minimax(depth - 1, False)
+                self._undo_move(from_pos, to_pos, captured)
                 best_score = max(best_score, score)
             return best_score
         else:
             best_score = float('inf')
             for from_pos, to_pos in legal_moves:
-                new_board = self._simulate_move_on_board(board, from_pos, to_pos)
-                score = self._minimax(new_board, depth - 1, True)
+                captured = self._do_move(from_pos, to_pos)
+                score = self._minimax(depth - 1, True)
+                self._undo_move(from_pos, to_pos, captured)
                 best_score = min(best_score, score)
             return best_score
 
-    def _evaluate(self, board: Board) -> float:
+    def _evaluate(self) -> float:
         """Simple position evaluation: sum of piece values"""
         score = 0
-        for piece in board.squares.values():
+        for piece in self.board.squares.values():
             if piece:
                 value = piece.value
                 if piece.color == self.color:
@@ -71,13 +87,3 @@ class MediumAI:
                 else:
                     score -= value
         return score
-
-    def _simulate_move(self, from_pos: str, to_pos: str) -> Board:
-        return self._simulate_move_on_board(self.board, from_pos, to_pos)
-
-    def _simulate_move_on_board(self, board: Board, from_pos: str, to_pos: str) -> Board:
-        new_board = board.copy()
-        piece = new_board.remove_piece(from_pos)
-        new_board.set_piece(to_pos, piece)
-        new_board.turn = board.turn.opponent()
-        return new_board
